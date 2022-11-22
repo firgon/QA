@@ -133,8 +133,13 @@ def purchase_places():
 
 
 @app.route('/point-display/<club>')
-def points_list(club):
-    return render_template('points-list.html', my_club=club, clubs=clubs)
+@app.route('/point-display')
+def points_list(club=None):
+    if club is None:
+        callback_link = url_for('index')
+    else:
+        callback_link = url_for('show_summary', club=club)
+    return render_template('points-list.html', link=callback_link, clubs=clubs)
 
 
 @app.route('/logout')
