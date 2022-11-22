@@ -100,7 +100,7 @@ def check_is_correct_required_places(required_places, club, competition) \
 
 
 def check_competition_date(competition) -> bool:
-    return competition['date'] > str(datetime.now())
+    return competition['date'] < str(datetime.now())
 
 
 @app.route('/purchasePlaces', methods=['POST'])
