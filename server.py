@@ -19,6 +19,7 @@ app.config.from_object("config")
 
 competitions = load_competitions()
 clubs = load_clubs()
+MAX_BOOKING = 12
 
 
 def get_club_with(criteria: str, value: str) -> dict:
@@ -66,14 +67,51 @@ def book(competition, club):
                                competitions=competitions)
 
 
+def check_is_correct_required_places(required_places, club, competition) \
+        -> (bool, str):
+    """function to check if required places is :
+    upper than 0 (you can't book 0 place or less)
+    less than or equal to maximum authorised (12)
+    less than or equal to remaining place in competition
+    less than or equal to remaining point of the club
+    @:param required_places: int
+    @:param club: dict with club infos
+
+    @:return boolean is correct or not
+    @:return message, to explain"""
+
+    if required_places <= 0:
+        return False, "You can't book 0 or less places !"
+
+    if required_places > club['points']:
+        return False, f"You don't have enough points" \
+                      f" to book {required_places} places !"
+
+    if required_places > MAX_BOOKING:
+        return False, f"You can't book more than {MAX_BOOKING} places !"
+
+    if required_places > competition['numberOfPlaces']:
+        return False, f"You can't book {required_places} places," \
+                      f"because {competition['name']} has only " \
+                      f"{competition['numberOfPlaces']} places remaining."
+
+    return True, 'Great-booking complete!'
+
+
 @app.route('/purchasePlaces', methods=['POST'])
 def purchase_places():
     competition = get_competition_with('name', request.form['competition'])
     club = get_club_with('name', request.form['club'])
-    places_required = int(request.form['places'])
-    competition['numberOfPlaces'] = int(
-        competition['numberOfPlaces']) - places_required
-    flash('Great-booking complete!')
+    required_places = int(request.form['places'])
+    is_correct, message = check_is_correct_required_places(required_places,
+                                                           club,
+                                                           competition)
+    flash(message)
+
+    if is_correct:
+        competition['numberOfPlaces'] = int(competition['numberOfPlaces']) \
+                                        - required_places
+
     return render_template('welcome.html', club=club,
                            competitions=competitions)
 
