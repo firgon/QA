@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <title>Points of each club | GUDLFT Registration</title>
+{% endblock header %}
+
+{% block title %}
+        <h2>Points by club :</h2>
+{% endblock title %}
+
+{% block content %}
+
+    <ul>
+        {% for club in clubs%}
+        <li>
+            {{club['name']}}<br />
+            Available points : {{club['points']}}</br>
+        </li>
+        <hr />
+        {% endfor %}
+    </ul>
+<a href="{{ url_for('show_summary', club=my_club) }}">Go back</a>
+
+{% endblock content %}
