@@ -111,6 +111,7 @@ def purchase_places():
     if is_correct:
         competition['numberOfPlaces'] = int(competition['numberOfPlaces']) \
                                         - required_places
+        club['points'] = int(club['points']) - required_places
 
     return render_template('welcome.html', club=club,
                            competitions=competitions)
