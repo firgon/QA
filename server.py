@@ -44,8 +44,13 @@ def index():
 
 
 @app.route('/showSummary', methods=['POST'])
-def show_summary():
-    club = get_club_with('email', request.form['email'])
+@app.route('/showSummary/<club>', )
+def show_summary(club=None):
+    if club is None:
+        club = get_club_with('email', request.form['email'])
+    else:
+        club = get_club_with('name', club)
+
     if club is None:
         flash("You are not registered. You can't connect.")
         return redirect(url_for('index'))
@@ -121,7 +126,9 @@ def purchase_places():
                            competitions=competitions)
 
 
-# TODO: Add route for points display
+@app.route('/point-display/<club>')
+def points_list(club):
+    return render_template('points-list.html', my_club=club, clubs=clubs)
 
 
 @app.route('/logout')
