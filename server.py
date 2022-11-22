@@ -83,14 +83,14 @@ def check_is_correct_required_places(required_places, club, competition) \
     if required_places <= 0:
         return False, "You can't book 0 or less places !"
 
-    if required_places > club['points']:
+    if required_places > int(club['points']):
         return False, f"You don't have enough points" \
                       f" to book {required_places} places !"
 
     if required_places > MAX_BOOKING:
         return False, f"You can't book more than {MAX_BOOKING} places !"
 
-    if required_places > competition['numberOfPlaces']:
+    if required_places > int(competition['numberOfPlaces']):
         return False, f"You can't book {required_places} places," \
                       f"because {competition['name']} has only " \
                       f"{competition['numberOfPlaces']} places remaining."
@@ -111,6 +111,7 @@ def purchase_places():
     if is_correct:
         competition['numberOfPlaces'] = int(competition['numberOfPlaces']) \
                                         - required_places
+        club['points'] = int(club['points']) - required_places
 
     return render_template('welcome.html', club=club,
                            competitions=competitions)
