@@ -102,12 +102,17 @@ def check_is_correct_required_places(required_places, club, competition) \
 def purchase_places():
     competition = get_competition_with('name', request.form['competition'])
     club = get_club_with('name', request.form['club'])
-    required_places = int(request.form['places'])
-    is_correct, message = check_is_correct_required_places(required_places,
-                                                           club,
-                                                           competition)
-    flash(message)
+    try:
+        required_places = int(request.form['places'])
+        is_correct, message = check_is_correct_required_places(required_places,
+                                                               club,
+                                                               competition)
 
+    except ValueError:
+        is_correct = False
+        message = "You must enter a number, please."
+
+    flash(message)
     if is_correct:
         competition['numberOfPlaces'] = int(competition['numberOfPlaces']) \
                                         - required_places
