@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 from flask import Flask, render_template, request, redirect, flash, url_for
 
@@ -103,34 +104,49 @@ def check_is_correct_required_places(required_places, club, competition) \
     return True, 'Great-booking complete!'
 
 
+def check_competition_date(competition) -> bool:
+    return competition['date'] < str(datetime.now())
+
+
 @app.route('/purchasePlaces', methods=['POST'])
 def purchase_places():
     competition = get_competition_with('name', request.form['competition'])
     club = get_club_with('name', request.form['club'])
-    try:
-        required_places = int(request.form['places'])
-        is_correct, message = check_is_correct_required_places(required_places,
-                                                               club,
-                                                               competition)
+    required_places = int(request.form['places'])
+    is_correct, message = check_is_correct_required_places(required_places,
+                                                           club,
+                                                           competition)
 
-    except ValueError:
-        is_correct = False
-        message = "You must enter a number, please."
+    if is_correct:
+        if check_competition_date(competition):
+            # should not happen,
+            # website prevent from accessing booking page on passed competition
+            message = "You can't book in a passed competition"
+        else:
+            competition['numberOfPlaces'] = \
+                int(competition['numberOfPlaces']) - required_places
+            club['points'] = int(club['points']) - required_places
 
     flash(message)
-    if is_correct:
-        competition['numberOfPlaces'] = int(competition['numberOfPlaces']) \
-                                        - required_places
-
     return render_template('welcome.html', club=club,
                            competitions=competitions)
 
 
 @app.route('/point-display/<club>')
-def points_list(club):
-    return render_template('points-list.html', my_club=club, clubs=clubs)
+@app.route('/point-display')
+def points_list(club=None):
+    if club is None:
+        callback_link = url_for('index')
+    else:
+        callback_link = url_for('show_summary', club=club)
+    return render_template('points-list.html', link=callback_link, clubs=clubs)
 
 
 @app.route('/logout')
 def logout():
     return redirect(url_for('index'))
+
+
+@app.context_processor
+def inject_now():
+    return {'now': str(datetime.utcnow())}
