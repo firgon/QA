@@ -91,7 +91,7 @@ def check_is_correct_required_places(required_places, club, competition) \
         return False, f"You can't book more than {MAX_BOOKING} places !"
 
     if required_places > int(competition['numberOfPlaces']):
-        return False, f"You can't book {required_places} places," \
+        return False, f"You can't book {required_places}places," \
                       f"because {competition['name']} has only " \
                       f"{competition['numberOfPlaces']} places remaining."
 
