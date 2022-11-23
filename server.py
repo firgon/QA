@@ -52,6 +52,9 @@ def is_correct_required_places(required_places, club, competition) \
     @:return boolean is correct or not
     @:return message, to explain"""
 
+    if club is None or competition is None:
+        return False, "Registration problem !"
+
     if required_places <= 0:
         return False, "You can't book 0 or less places !"
 

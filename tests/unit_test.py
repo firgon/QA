@@ -1,5 +1,4 @@
 import server
-from tests.conftest import client as gudlft_client
 import pytest
 
 
@@ -55,6 +54,8 @@ class TestServer:
         # almost same function as previous one, only used on 'name'
         result = server.get_competition_with('name', "Spring Festival 2023")
         assert result == self.third_competition
+        result2 = server.get_competition_with('name', "Spring Festival 2022")
+        assert result2 is None
 
     @pytest.mark.parametrize('required, club, competition, bool_answer', [
         (-1, first_club, third_competition, False),  # negative
@@ -76,21 +77,3 @@ class TestServer:
     ])
     def test_check_competition_date(self, competition, boolean):
         assert server.check_competition_date(competition) == boolean
-
-    def test_index_should_return_status_code_200(self, gudlft_client):
-        response = gudlft_client.get('/')
-        assert response.status_code == 200
-
-    def test_is_correct_required_places_but_not_enough(self):
-        pass
-
-    @pytest.mark.parametrize('email, status_code',
-                             [('emmanuel.albisser@gmail.com', 302),
-                              ('john@simplylift.co', 200)])
-    def test_show_summary_should_return_status_code_200(self,
-                                                        gudlft_client,
-                                                        email,
-                                                        status_code):
-        response = gudlft_client.post('/showSummary',
-                                      data={'email': email})
-        assert response.status_code == status_code
