@@ -100,7 +100,7 @@ def check_is_correct_required_places(required_places, club, competition) \
 
 
 def check_competition_date(competition) -> bool:
-    return competition['date'] < str(datetime.now())
+    return competition['date'] > str(datetime.now())
 
 
 @app.route('/purchasePlaces', methods=['POST'])
@@ -113,7 +113,7 @@ def purchase_places():
                                                            competition)
 
     if is_correct:
-        if check_competition_date(competition):
+        if not check_competition_date(competition):
             # should not happen,
             # website prevent from accessing booking page on passed competition
             message = "You can't book in a passed competition"
