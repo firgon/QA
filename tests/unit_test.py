@@ -2,7 +2,7 @@ import server
 import pytest
 
 
-class TestServer:
+class Data:
     second_club = {
         "name": "Iron Temple",
         "email": "admin@irontemple.com",
@@ -15,27 +15,36 @@ class TestServer:
         "points": "13"
     }
 
-    first_fake_competition = {
+    first_fake_comp = {
         "name": "Spring Festival",
         "date": "2020-03-27 10:00:00",
         "numberOfPlaces": "5"
     }
 
-    third_competition = {
+    third_comp = {
         "name": "Spring Festival 2023",
         "date": "2023-03-27 10:00:00",
         "numberOfPlaces": "25"
     }
 
+
+class TestServer:
+
+    @classmethod
+    def setup_class(cls):
+        """ method to re init server data"""
+        server.clubs = server.load_clubs()
+        server.competitions = server.load_competitions()
+
     def test_load_clubs(self):
         result = server.load_clubs()
         assert len(result) == 3
-        assert result[0] == self.first_club
+        assert result[0] == Data.first_club
 
     def test_load_competitions(self):
         result = server.load_competitions()
         assert len(result) == 4
-        assert result[2] == self.third_competition
+        assert result[2] == Data.third_comp
 
     @pytest.mark.parametrize('value, criteria, points',
                              [("Simply Lift", 'name', "13"),
@@ -53,17 +62,19 @@ class TestServer:
     def test_get_competition_with(self):
         # almost same function as previous one, only used on 'name'
         result = server.get_competition_with('name', "Spring Festival 2023")
-        assert result == self.third_competition
+        assert result == Data.third_comp
         result2 = server.get_competition_with('name', "Spring Festival 2022")
         assert result2 is None
 
     @pytest.mark.parametrize('required, club, competition, bool_answer', [
-        (-1, first_club, third_competition, False),  # negative
-        (13, first_club, third_competition, False),  # more than 12
-        (5, second_club, third_competition, False),  # more than points
-        (6, first_club, third_competition, True),
-        (6, first_club, first_fake_competition, False),  # more than places
-        (3, second_club, third_competition, True),
+        (-1, Data.first_club, Data.third_comp, False),  # negative
+        (13, Data.first_club, Data.third_comp, False),  # more than 12
+        (5, Data.second_club, Data.third_comp, False),  # more than points
+        (6, Data.first_club, Data.third_comp, True),
+        (6, Data.first_club, Data.first_fake_comp, False),  # more than places
+        (3, Data.second_club, Data.third_comp, True),
+        (3, None, Data.third_comp, False),
+        (3, Data.second_club, None, False),
     ])
     def test_is_correct_required_places(self, required, club,
                                         competition, bool_answer):
@@ -72,8 +83,8 @@ class TestServer:
         assert answer == bool_answer
 
     @pytest.mark.parametrize('competition, boolean', [
-        (first_fake_competition, False),
-        (third_competition, True)
+        (Data.first_fake_comp, False),
+        (Data.third_comp, True)
     ])
     def test_check_competition_date(self, competition, boolean):
         assert server.check_competition_date(competition) == boolean
