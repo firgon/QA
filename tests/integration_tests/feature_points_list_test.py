@@ -1,7 +1,3 @@
-import pytest
-from .conftest import client as gudlft_client
-
-
 class TestPointsList:
     def test_points_list(self, gudlft_client):
         for response in [gudlft_client.get('/point-display'),

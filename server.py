@@ -3,13 +3,16 @@ import json
 from flask import Flask, render_template, request, redirect, flash, url_for
 
 
-def load_clubs() -> dict:
+MAX_BOOKING = 12
+
+
+def load_clubs() -> list:
     with open('clubs.json') as c:
         list_of_clubs = json.load(c)['clubs']
         return list_of_clubs
 
 
-def load_competitions() -> dict:
+def load_competitions() -> list:
     with open('competitions.json') as comps:
         list_of_competitions = json.load(comps)['competitions']
         return list_of_competitions
@@ -20,10 +23,9 @@ app.config.from_object("config")
 
 competitions = load_competitions()
 clubs = load_clubs()
-MAX_BOOKING = 12
 
 
-def get_club_with(criteria: str, value: str) -> dict:
+def get_club_with(criteria: str, value: str) -> dict | None:
     for club in clubs:
         if criteria in club.keys() and club[criteria] == value:
             return club
@@ -31,7 +33,7 @@ def get_club_with(criteria: str, value: str) -> dict:
         return None
 
 
-def get_competition_with(criteria: str, value: str) -> dict:
+def get_competition_with(criteria: str, value: str) -> dict | None:
     for competition in competitions:
         if criteria in competition.keys() and competition[criteria] == value:
             return competition

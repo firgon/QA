@@ -1,7 +1,4 @@
-import pytest
-
 import server
-from .conftest import client as gudlft_client
 from tests.data import Data
 
 

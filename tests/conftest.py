@@ -7,3 +7,4 @@ from server import app
 def client():
     with app.test_client() as client:
         yield client
+

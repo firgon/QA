@@ -1,8 +1,3 @@
-import pytest
-from .conftest import client as gudlft_client
-from tests.data import Data
-
-
 class TestIntegration:
 
     def test_index_should_return_status_code_200(self, gudlft_client):

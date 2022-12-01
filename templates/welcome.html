@@ -10,7 +10,7 @@
 
 {% block content %}
 
-    Points available: {{club['points']}} (<a href="{{ url_for('points_list', club=club['name']) }}">See all clubs</a>)
+    Points available: <span id="points">{{club['points']}}</span> (<a href="{{ url_for('points_list', club=club['name']) }}">See all clubs</a>)
     <h3>Competitions:</h3>
     <ul>
         {% for comp in competitions%}

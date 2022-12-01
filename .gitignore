@@ -6,3 +6,4 @@ lib
 __pycache__
 /.idea
 .gitignore
+geckodriver.log
