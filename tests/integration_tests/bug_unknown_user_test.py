@@ -1,5 +1,6 @@
 import pytest
 
+from .conftest import client as gudlft_client
 
 class TestUnknownUser:
     @pytest.mark.parametrize('email, status_code',

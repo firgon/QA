@@ -13,12 +13,12 @@ class TestRequiredPlacesCheck:
         (0, Data.first_club,
          "You can't book 0 or less places !"),  # zero
         (13, Data.first_club,
-         "You can't book more than 12 places !"),  # more than 12
-        (5, Data.second_club,
-         "You don't have enough points to book 5 places !"),  # more than points
-        (8, Data.third_club,
-         "You can't book 8 places,because Fall Classic 2023 has only"),
+         "You can't book more than 12"),  # more than 12
         (8, Data.first_club, 'Great-booking complete!'),
+        (8, Data.first_club,
+         "You don't have enough points to book 8 places !"),
+        (8, Data.third_club,
+         "Great-booking complete!"),
 
     ])
     def test_required_place_check(self, required_places, club, answer):

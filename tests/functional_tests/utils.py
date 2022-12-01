@@ -7,7 +7,7 @@ class Utils:
 
     def __init__(self):
 
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.Chrome()
         self.browser.get('http://127.0.0.1:5000/')
 
     def close(self):

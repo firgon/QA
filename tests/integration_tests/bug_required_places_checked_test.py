@@ -1,5 +1,5 @@
 import pytest
-
+from .conftest import client as gudlft_client
 from tests.data import Data
 
 
@@ -15,9 +15,7 @@ class TestRequiredPlacesChecked:
          "You don&#39;t have enough points"),  # more than points
         (5, Data.first_club, Data.first_fake_comp,
          "You can&#39;t book in a past competition"),  # past competition
-        (8, Data.first_club, Data.second_comp, 'Great-booking complete!'),
-        (8, Data.third_club, Data.second_comp,
-         "You can&#39;t book 8 places,because Fall Classic 2023 has only")
+        (8, Data.first_club, Data.second_comp, 'Great-booking complete!')
     ])
     def test_purchase_places(self, gudlft_client,
                              places, club, competition,
@@ -28,4 +26,6 @@ class TestRequiredPlacesChecked:
             'places': places
         })
         assert response.status_code == 200
+        if answer not in response.data.decode():
+            print(response.data.decode())
         assert answer in response.data.decode()
